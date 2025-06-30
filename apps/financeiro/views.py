@@ -13,5 +13,5 @@ def cadastrar_conta(request):
         vencimento = request.POST.get('vencimento')
         tipo = request.POST.get('tipo')
         Conta.objects.create(descricao=descricao, valor=valor, vencimento=vencimento, tipo=tipo)
-        return redirect('listar_contas')
+        return redirect('financeiro:listar_contas')
     return render(request, 'financeiro/cadastrar.html')
