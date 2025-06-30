@@ -1,4 +1,6 @@
 from django.db import models
+from django.conf import settings
+from datetime import timedelta
 
 TIPOS = [
     ('Pagar', 'Conta a Pagar'),
@@ -12,6 +14,15 @@ class Conta(models.Model):
     tipo = models.CharField(max_length=10, choices=TIPOS)
     pago = models.BooleanField(default=False)
     data_lancamento = models.DateTimeField(auto_now_add=True)
+
+    @property
+    def data_alerta(self):
+        """Retorna a data de alerta considerando dias úteis."""
+        feriados = getattr(settings, 'FERIADOS', [])
+        data = self.vencimento
+        if data.weekday() >= 5 or data in feriados:
+            data -= timedelta(days=1)
+        return data
 
     def __str__(self):
         return f"{self.descricao} - {self.tipo}"

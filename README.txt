@@ -26,3 +26,18 @@ Crie um atalho com o comando:
 cmd /k "cd C:\caminho\do\projeto && python manage.py runserver 0.0.0.0:8000"
 ```
 E adicione esse atalho na pasta de inicialização automática do Windows.
+
+## Alertas de contas
+
+Para verificar quais contas possuem alerta na data atual, execute:
+```
+python manage.py verificar_alertas
+```
+
+## Gerar executável
+
+É possível criar um executável do projeto com [PyInstaller](https://www.pyinstaller.org/). Após instalar o pacote, rode:
+```
+pyinstaller manage.py --name rl_construcoes --onefile
+```
+O executável gerado irá iniciar o Django e criar o banco de dados caso ainda não exista.
