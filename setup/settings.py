@@ -41,7 +41,8 @@ INSTALLED_APPS = [
 
     #app sistema
     'apps.clientes',
-    'apps.financeiro'
+    'apps.financeiro',
+    'apps.core',
 ]
 
 MIDDLEWARE = [
