@@ -5,7 +5,7 @@
 <ul>
   {% for conta in contas %}
     <li>
-      {{ conta.descricao }} - {{ conta.tipo }} - R$ {{ conta.valor }} - {{ conta.vencimento }} - {% if conta.pago %}Pago{% else %}Pendente{% endif %}
+      {{ conta.descricao }} - {{ conta.tipo }} - R$ {{ conta.valor }} - {{ conta.vencimento }} - alerta: {{ conta.data_alerta }} - {% if conta.pago %}Pago{% else %}Pendente{% endif %}
     </li>
   {% endfor %}
 </ul>
