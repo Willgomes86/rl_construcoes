@@ -1,7 +1,7 @@
 {% extends 'core/base.html' %}
 {% block content %}
 <h2>Contas a Pagar e Receber</h2>
-<a href="{% url 'cadastrar_conta' %}" class="btn btn-primary">Nova Conta</a>
+<a href="{% url 'financeiro:cadastrar_conta' %}" class="btn btn-primary">Nova Conta</a>
 <ul>
   {% for conta in contas %}
     <li>

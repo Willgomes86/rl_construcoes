@@ -17,7 +17,7 @@ def cadastrar_cliente(request):
         for arquivo in arquivos[:10]:
             Documento.objects.create(cliente=cliente, arquivo=arquivo, nome=arquivo.name)
 
-        return redirect('listar_clientes')
+        return redirect('clientes:listar_clientes')
 
     return render(request, 'clientes/cadastrar.html')
 
