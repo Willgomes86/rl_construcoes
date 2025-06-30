@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2>Cadastrar Conta</h2>
+<form method="post">
+  {% csrf_token %}
+  <input type="text" name="descricao" placeholder="Descrição" required><br>
+  <input type="number" name="valor" placeholder="Valor" step="0.01" required><br>
+  <input type="date" name="vencimento" required><br>
+  <select name="tipo">
+    <option value="Pagar">Conta a Pagar</option>
+    <option value="Receber">Conta a Receber</option>
+  </select><br><br>
+  <button type="submit">Cadastrar</button>
+</form>
+{% endblock %}

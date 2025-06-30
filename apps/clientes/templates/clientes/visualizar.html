@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2>{{ cliente.nome }}</h2>
+<p>Email: {{ cliente.email }}</p>
+<p>Telefone: {{ cliente.telefone }}</p>
+
+<h3>Documentos:</h3>
+<ul>
+  {% for doc in cliente.documentos.all %}
+    <li>
+      <a href="{{ doc.arquivo.url }}" target="_blank">{{ doc.nome }}</a>
+    </li>
+  {% endfor %}
+</ul>
+<a href="{% url 'listar_clientes' %}">Voltar</a>
+{% endblock %}
