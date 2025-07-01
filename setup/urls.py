@@ -9,3 +9,6 @@ urlpatterns = [
     path('clientes/', include(('apps.clientes.urls', 'clientes'), namespace='clientes')),
     path('', include(('apps.core.urls', 'core'), namespace='core')),
 ]
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
