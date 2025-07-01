@@ -1,0 +1,15 @@
+{% extends 'core/base.html' %}
+{% block title %}Clientes | RL Construções{% endblock %}
+{% block content %}
+<h2>Lista de Clientes</h2>
+
+<a href="{% url 'clientes:cliente_create' %}" class="btn">Cadastrar Novo Cliente</a>
+
+<ul>
+  {% for cliente in clientes %}
+    <li>{{ cliente.nome }} - {{ cliente.email }}</li>
+  {% empty %}
+    <li>Nenhum cliente cadastrado.</li>
+  {% endfor %}
+</ul>
+{% endblock %}

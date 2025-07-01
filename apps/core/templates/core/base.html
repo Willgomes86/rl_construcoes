@@ -1,0 +1,203 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}RL Construções Elétricas{% endblock %}</title>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans&display=swap" rel="stylesheet">
+    <style>
+        html, body {
+            height: 100%;
+            margin: 0;
+            font-family: 'Open Sans', sans-serif;
+            background-color: #f4f4f4;
+        }
+
+        .wrapper {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        header {
+            background-color: #22534c;
+            color: white;
+            padding: 10px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.4);
+            flex-wrap: wrap;
+        }
+
+        header .logo {
+            font-size: 22px;
+            font-weight: bold;
+        }
+
+        nav {
+            display: flex;
+            flex-wrap: wrap;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            margin-left: 20px;
+            font-weight: bold;
+            margin-top: 5px;
+        }
+
+        .container {
+            flex: 1;
+            width: 100%;
+            max-width: 1400px;
+            margin: 20px auto;
+            background-color: white;
+            padding: 30px 40px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px #ccc;
+        }
+
+        footer {
+            text-align: center;
+            font-size: 13px;
+            color: #999;
+            background-color: #fff;
+            border-top: 1px solid #ddd;
+            padding: 15px;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.4);
+        }
+
+        footer a {
+            color: #A9A9A9;
+            text-decoration: none;
+        }
+
+        .btn {
+            background-color: #f26722;
+            border: none;
+            padding: 10px 20px;
+            color: white;
+            font-weight: bold;
+            border-radius: 4px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            margin: 5px 5px 5px 0;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.4);
+        }
+
+        .btn:hover {
+            background-color: #d4520e;
+        }
+
+        .btn-pagar {
+            background-color: #f26722;
+        }
+
+        .btn-pagar:hover {
+            background-color: #c1440e;
+        }
+
+        .btn-receber {
+            background-color: #2e7d32;
+        }
+
+        .btn-receber:hover {
+            background-color: #1b5e20;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+
+        th, td {
+            padding: 10px;
+            text-align: left;
+        }
+
+        th {
+            white-space: nowrap;
+        }
+
+        td {
+            vertical-align: top;
+        }
+
+        .tabela-pagar {
+            border: 1px solid #ffd8c2;
+            background-color: #fff8f5;
+        }
+
+        .tabela-pagar th {
+            background-color: #f6ae8f;
+            color: #611b00;
+        }
+
+        .tabela-pagar td {
+            border-top: 1px solid #e0e0e0;
+        }
+
+        .tabela-receber {
+            border: 1px solid #c8e6c9;
+            background-color: #f9fdf9;
+        }
+
+        .tabela-receber th {
+            background-color: #a5d6a7;
+            color: #1b5e20;
+        }
+
+        .tabela-receber td {
+            border-top: 1px solid #e0e0e0;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        label {
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+<div class="wrapper">
+    <header>
+        <div class="logo">
+            <img src="{% static 'core/img/logo-b.png' %}" alt="Logo RL Construções" style="height: 40px;">
+        </div>
+        <nav>
+            <a href="{% url 'core:home' %}">Início</a>
+            <a href="{% url 'clientes:cliente_list' %}">Clientes</a>
+    <!--        <a href="{% url 'financeiro:nova_conta_pagar' %}">Nova Conta a Pagar</a>-->
+    <!--        <a href="{% url 'financeiro:nova_conta_receber' %}">Nova Conta a Receber</a>-->
+            <a href="{% url 'financeiro:contas_pagar' %}">Contas a Pagar</a>
+            <a href="{% url 'financeiro:contas_receber' %}">Contas a Receber</a>
+            <a href="{% url 'financeiro:contas_alerta' %}">Contas do Dia</a>
+            <a href="{% url 'financeiro:relatorios' %}">Relatórios</a>
+        </nav>
+    </header>
+
+    <div class="container">
+        {% block content %}
+        {% endblock %}
+    </div>
+
+    <footer>
+        Desenvolvido por
+        <a href="https://www.instagram.com/codecraftedataanalytics" target="_blank">
+            CodeCraft & Data Analytics
+        </a>
+    </footer>
+</div>
+</body>
+</html>

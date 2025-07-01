@@ -1,0 +1,92 @@
+{% extends 'core/base.html' %}
+{% block title %}Relatório Financeiro | RL Construções{% endblock %}
+
+{% block content %}
+<h2>Relatório Financeiro</h2>
+
+<form method="get">
+    <div style="display: flex; flex-wrap: wrap; gap: 20px;">
+        <div style="flex: 1;">
+            <label for="id_cliente">Cliente</label>
+            {{ form.cliente }}
+        </div>
+        <div style="flex: 1;">
+            <label for="id_tipo">Tipo</label>
+            {{ form.tipo }}
+        </div>
+        <div style="flex: 1;">
+            <label for="id_status">Status</label>
+            {{ form.status }}
+        </div>
+        <div style="flex: 1;">
+            <label for="id_data_inicio">Data Início</label>
+            {{ form.data_inicio }}
+        </div>
+        <div style="flex: 1;">
+            <label for="id_data_fim">Data Fim</label>
+            {{ form.data_fim }}
+        </div>
+    </div>
+    <button type="submit" class="btn">Filtrar</button>
+</form>
+
+<hr>
+
+<table>
+    <thead>
+        <tr>
+            <th>Cliente</th>
+            <th>Tipo</th>
+            <th>Descrição</th>
+            <th>Valor</th>
+            <th>Vencimento</th>
+            <th>Status</th>
+            <th>Pagamento</th>
+            <th>Comprovante</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for conta in contas %}
+        <tr>
+            <td>{{ conta.cliente.nome }}</td>
+            <td>{{ conta.get_tipo_display }}</td>
+            <td>{{ conta.descricao }}</td>
+            <td>R$ {{ conta.valor }}</td>
+            <td>{{ conta.data_vencimento }}</td>
+            <td>
+                {% if conta.pago %}
+                    Pago
+                {% else %}
+                    Pendente
+                {% endif %}
+            </td>
+            <td>
+                {% if conta.data_pagamento %}
+                    {{ conta.data_pagamento }}
+                {% else %}
+                    —
+                {% endif %}
+            </td>
+            <td>
+                {% if conta.comprovante %}
+                    <a href="{{ conta.comprovante.url }}" target="_blank">Ver</a>
+                {% else %}
+                    —
+                {% endif %}
+            </td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="8">Nenhuma conta encontrada.</td></tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<hr>
+
+<h3>Totalizadores</h3>
+<ul>
+    <li><strong>Total geral:</strong> R$ {{ total.total_valor|default:"0.00" }}</li>
+    <li><strong>Total pago:</strong> R$ {{ total.total_pagas|default:"0.00" }}</li>
+    <li><strong>Total pendente:</strong> R$ {{ total.total_pendentes|default:"0.00" }}</li>
+</ul>
+{% endblock %}

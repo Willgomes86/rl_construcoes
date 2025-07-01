@@ -1,0 +1,42 @@
+{% extends 'core/base.html' %}
+{% block title %}Contas a Pagar | RL Construções{% endblock %}
+{% block content %}
+<h2 style="color: #c1440e;">Contas a Pagar</h2>
+<a href="{% url 'financeiro:nova_conta_pagar' %}" class="btn btn-pagar">Nova Conta a Pagar</a>
+<table class="tabela-pagar">
+    <tr>
+        <th>Cliente</th>
+        <th>Descrição</th>
+        <th>Valor</th>
+        <th>Vencimento</th>
+        <th>Status</th>
+        <th>Ações</th>
+    </tr>
+    {% for conta in contas %}
+    <tr>
+        <td>{{ conta.cliente }}</td>
+        <td>{{ conta.descricao }}</td>
+        <td>R$ {{ conta.valor }}</td>
+        <td>{{ conta.data_vencimento }}</td>
+        <td>
+          {% if conta.pago %}
+            Pago
+          {% else %}
+            Pendente
+          {% endif %}
+        </td>
+
+        <td>
+            {% if not conta.pago %}
+                <a href="{% url 'marcar_pago' conta.pk %}" class="btn btn-pagar">Marcar como Pago</a>
+            {% endif %}
+            {% if conta.comprovante %}
+                <a href="{{ conta.comprovante.url }}" target="_blank">Ver Anexo</a>
+            {% endif %}
+        </td>
+    </tr>
+    {% empty %}
+    <tr><td colspan="6">Nenhuma conta cadastrada.</td></tr>
+    {% endfor %}
+</table>
+{% endblock %}

@@ -1,0 +1,12 @@
+{% extends 'core/base.html' %}
+{% block title %}Contas do Dia | RL Construções{% endblock %}
+{% block content %}
+<h2>Contas com Vencimento</h2>
+<ul>
+  {% for conta in contas %}
+    <li>{{ conta.get_tipo_display }} - {{ conta.descricao }} | R$ {{ conta.valor }} | Vencimento: {{ conta.data_vencimento }}</li>
+  {% empty %}
+    <li>Não há contas com vencimento hoje.</li>
+  {% endfor %}
+</ul>
+{% endblock %}
