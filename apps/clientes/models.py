@@ -6,6 +6,7 @@ class Cliente(models.Model):
     email = models.EmailField("E-mail", blank=True)
     telefone = models.CharField("Telefone", max_length=20, blank=True)
     endereco = models.TextField("Endereço", blank=True)
+    foto = models.ImageField(upload_to='clientes/', blank=True, null=True)
 
     def __str__(self):
         return self.nome

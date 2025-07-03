@@ -1,12 +1,66 @@
 {% extends 'core/base.html' %}
-{% block title %}Novo Cliente | RL Construções{% endblock %}
+{% load static %}
+
 {% block content %}
-<h2>Cadastro de Cliente</h2>
-<form method="post" enctype="multipart/form-data">
+<h2 class="mb-3">Cadastrar Cliente</h2>
+
+<form method="post" enctype="multipart/form-data" class="row g-3">
     {% csrf_token %}
-    {{ form.as_p }}
-    <label>Anexos (máx. 10):</label>
-    <input type="file" name="arquivos" multiple accept=".pdf,.jpg,.jpeg,.png">
-    <button type="submit" class="btn">Salvar</button>
+
+    <!-- CARD COM A FOTO -->
+    <div class="col-md-3">
+        <div class="card">
+            <div class="card-header text-center">Foto</div>
+            <div class="card-body text-center">
+                {% if form.instance.foto %}
+                    <img src="{{ form.instance.foto.url }}" class="img-thumbnail mb-2" style="max-height: 180px;">
+                {% else %}
+                    <img src="{% static 'img/avatar.png' %}" class="img-thumbnail mb-2" style="max-height: 180px;">
+                {% endif %}
+                {{ form.foto }}
+            </div>
+        </div>
+    </div>
+
+    <!-- CAMPOS DO CLIENTE -->
+    <div class="col-md-9">
+        <div class="row g-3">
+
+            <div class="col-md-6">
+                <label for="{{ form.nome.id_for_label }}" class="form-label">Nome</label>
+                {{ form.nome }}
+            </div>
+
+            <div class="col-md-6">
+                <label for="{{ form.cpf_cnpj.id_for_label }}" class="form-label">CPF/CNPJ</label>
+                {{ form.cpf_cnpj }}
+            </div>
+
+            <div class="col-md-6">
+                <label for="{{ form.telefone.id_for_label }}" class="form-label">Telefone</label>
+                {{ form.telefone }}
+            </div>
+
+            <div class="col-md-6">
+                <label for="{{ form.email.id_for_label }}" class="form-label">Email</label>
+                {{ form.email }}
+            </div>
+
+            <div class="col-12">
+                <label for="{{ form.endereco.id_for_label }}" class="form-label">Endereço</label>
+                {{ form.endereco }}
+            </div>
+
+            <div class="col-12">
+                <label for="arquivos" class="form-label">Anexos (até 10 arquivos)</label>
+                <input type="file" name="arquivos" multiple class="form-control">
+            </div>
+
+            <div class="col-12 text-end">
+                <button type="submit" class="btn btn-success">Salvar</button>
+                <a href="{% url 'clientes:cliente_list' %}" class="btn btn-secondary">Cancelar</a>
+            </div>
+        </div>
+    </div>
 </form>
 {% endblock %}

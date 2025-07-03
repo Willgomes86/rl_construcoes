@@ -1,4 +1,5 @@
 from pathlib import Path
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -96,15 +97,15 @@ USE_I18N = True
 USE_TZ = True
 
 
-
 MEDIA_URL = '/media/'
-MEDIA_ROOT = BASE_DIR / 'media'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 STATIC_URL = '/static/'
 
-# Isso é importante se estiver usando pastas personalizadas
 STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'static'),
     BASE_DIR / "apps" / "core" / "static",
 ]
+
 
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
