@@ -2,7 +2,9 @@
 {% block title %}Contas a Pagar | RL Construções{% endblock %}
 {% block content %}
 <h2 style="color: #c1440e;">Contas a Pagar</h2>
+
 <a href="{% url 'financeiro:nova_conta_pagar' %}" class="btn btn-pagar">Nova Conta a Pagar</a>
+
 <table class="tabela-pagar">
     <tr>
         <th>Cliente</th>
@@ -16,22 +18,57 @@
     <tr>
         <td>{{ conta.cliente }}</td>
         <td>{{ conta.descricao }}</td>
-        <td>R$ {{ conta.valor }}</td>
-        <td>{{ conta.data_vencimento }}</td>
+        <td>R$ {{ conta.valor|floatformat:2|default:"0,00" }}</td>
+        <td>{{ conta.data_vencimento|date:"d/m/Y" }}</td>
         <td>
-          {% if conta.pago %}
-            Pago
-          {% else %}
-            Pendente
-          {% endif %}
+            {% if conta.pago %}
+                <span style="color: green;">Pago</span>
+            {% else %}
+                <span style="color: red;">Pendente</span>
+            {% endif %}
         </td>
-
         <td>
             {% if not conta.pago %}
-                <a href="{% url 'marcar_pago' conta.pk %}" class="btn btn-pagar">Marcar como Pago</a>
+                <!-- Botão para abrir o modal -->
+                <button class="btn btn-pagar" data-bs-toggle="modal" data-bs-target="#modalPagamento{{ conta.pk }}">
+                    Marcar como Pago
+                </button>
+
+                <!-- Modal -->
+                <div class="modal fade" id="modalPagamento{{ conta.pk }}" tabindex="-1" aria-labelledby="modalLabel{{ conta.pk }}" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <form method="POST" action="{% url 'financeiro:confirmar_pagamento' %}" enctype="multipart/form-data">
+                                {% csrf_token %}
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="modalLabel{{ conta.pk }}">Confirmar Pagamento</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <input type="hidden" name="conta_id" value="{{ conta.pk }}">
+
+                                    <div class="mb-3">
+                                        <label for="data_pagamento{{ conta.pk }}" class="form-label">Data do Pagamento:</label>
+                                        <input type="date" name="data_pagamento" id="data_pagamento{{ conta.pk }}" class="form-control" required>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label for="comprovante{{ conta.pk }}" class="form-label">Comprovante (opcional):</label>
+                                        <input type="file" name="comprovante" id="comprovante{{ conta.pk }}" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="submit" class="btn btn-success">Confirmar Pagamento</button>
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
             {% endif %}
+
             {% if conta.comprovante %}
-                <a href="{{ conta.comprovante.url }}" target="_blank">Ver Anexo</a>
+                <a href="{{ conta.comprovante.url }}" target="_blank" class="btn btn-secondary" style="margin-left: 5px;">Ver Anexo</a>
             {% endif %}
         </td>
     </tr>
@@ -39,4 +76,7 @@
     <tr><td colspan="6">Nenhuma conta cadastrada.</td></tr>
     {% endfor %}
 </table>
+
+<!-- Certifique-se de que o Bootstrap está carregado no base.html (JS + CSS) -->
+
 {% endblock %}

@@ -1,12 +1,110 @@
 {% extends 'core/base.html' %}
 {% block title %}Contas do Dia | RL Construções{% endblock %}
+
 {% block content %}
-<h2>Contas com Vencimento</h2>
-<ul>
-  {% for conta in contas %}
-    <li>{{ conta.get_tipo_display }} - {{ conta.descricao }} | R$ {{ conta.valor }} | Vencimento: {{ conta.data_vencimento }}</li>
-  {% empty %}
-    <li>Não há contas com vencimento hoje.</li>
-  {% endfor %}
-</ul>
+<div class="container mt-4">
+  <h4 align="center" class="mb-4">Contas com Vencimento Hoje</h4>
+  <hr color="orange">
+
+  {% if contas %}
+    <div class="table-responsive">
+      <table class="table table-bordered table-hover align-middle text-center">
+        <thead class="table-dark">
+          <tr>
+            <th>Nome</th>
+            <th>Descrição</th>
+            <th>Valor</th>
+            <th>Vencimento</th>
+            <th>Tipo</th>
+            <th>Ações</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for conta in contas %}
+            <tr>
+              {% if conta.tipo|upper == 'PAGAR' %}
+                <td class="linha-pagar">{{ conta.cliente }}</td>
+                <td class="linha-pagar">{{ conta.descricao }}</td>
+                <td class="linha-pagar">R$ {{ conta.valor }}</td>
+                <td class="linha-pagar">{{ conta.data_vencimento }}</td>
+                <td class="linha-pagar">{{ conta.get_tipo_display }}</td>
+                <td class="linha-pagar">
+                  {% if not conta.pago %}
+                    <button type="button" class="btn btn-sm btn-outline-success" data-bs-toggle="modal" data-bs-target="#modalPagamento{{ conta.id }}">
+                      Marcar como Pago
+                    </button>
+                  {% else %}
+                    <span class="badge bg-success">Pago</span>
+                  {% endif %}
+                </td>
+              {% elif conta.tipo|upper == 'RECEBER' %}
+                <td class="linha-receber">{{ conta.cliente }}</td>
+                <td class="linha-receber">{{ conta.descricao }}</td>
+                <td class="linha-receber">R$ {{ conta.valor }}</td>
+                <td class="linha-receber">{{ conta.data_vencimento }}</td>
+                <td class="linha-receber">{{ conta.get_tipo_display }}</td>
+                <td class="linha-receber">
+                  {% if not conta.pago %}
+                    <button type="button" class="btn btn-sm btn-outline-success" data-bs-toggle="modal" data-bs-target="#modalPagamento{{ conta.id }}">
+                      Marcar como Pago
+                    </button>
+                  {% else %}
+                    <span class="badge bg-success">Pago</span>
+                  {% endif %}
+                </td>
+              {% else %}
+                <td>{{ conta.cliente }}</td>
+                <td>{{ conta.descricao }}</td>
+                <td>R$ {{ conta.valor }}</td>
+                <td>{{ conta.data_vencimento }}</td>
+                <td>{{ conta.get_tipo_display }}</td>
+                <td>
+                  {% if not conta.pago %}
+                    <button type="button" class="btn btn-sm btn-outline-success" data-bs-toggle="modal" data-bs-target="#modalPagamento{{ conta.id }}">
+                      Marcar como Pago
+                    </button>
+                  {% else %}
+                    <span class="badge bg-success">Pago</span>
+                  {% endif %}
+                </td>
+              {% endif %}
+            </tr>
+
+            <!-- Modal de Pagamento -->
+            <div class="modal fade" id="modalPagamento{{ conta.id }}" tabindex="-1" aria-labelledby="modalLabel{{ conta.id }}" aria-hidden="true">
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <form method="post" action="{% url 'financeiro:marcar_pago' conta.id %}" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="modal-header">
+                      <h5 class="modal-title" id="modalLabel{{ conta.id }}">Confirmar Pagamento</h5>
+                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+                    </div>
+                    <div class="modal-body text-start">
+                      <div class="mb-3">
+                        <label for="data_pagamento{{ conta.id }}" class="form-label">Data de Pagamento</label>
+                        <input type="date" name="data_pagamento" id="data_pagamento{{ conta.id }}" class="form-control" required>
+                      </div>
+                      <div class="mb-3">
+                        <label for="comprovante{{ conta.id }}" class="form-label">Comprovante (opcional)</label>
+                        <input type="file" name="comprovante" id="comprovante{{ conta.id }}" class="form-control">
+                        <input type="hidden" name="conta_id" value="{{ conta.id }}">
+                      </div>
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                      <button type="submit" class="btn btn-primary">Confirmar</button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  {% else %}
+    <div class="alert alert-info">Não há contas com vencimento hoje.</div>
+  {% endif %}
+</div>
 {% endblock %}

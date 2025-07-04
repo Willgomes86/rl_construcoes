@@ -1,12 +1,12 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from .forms import ContaForm, RelatorioForm
+from .forms import ContaPagarForm, ContaReceberForm, RelatorioForm
 from .models import Conta
 from datetime import date, timedelta
 import holidays
-from django.db import models
-
+from django.db.models import Sum, Case, When, F, Value as V, DecimalField
 
 BR_HOLIDAYS = holidays.Brazil()
+
 
 def contas_alerta(request):
     hoje = date.today()
@@ -27,40 +27,48 @@ def contas_pagar_list(request):
     contas = Conta.objects.filter(tipo='PAGAR').order_by('data_vencimento')
     return render(request, 'financeiro/contas_pagar_list.html', {'contas': contas})
 
+
 def contas_receber_list(request):
     contas = Conta.objects.filter(tipo='RECEBER').order_by('data_vencimento')
     return render(request, 'financeiro/contas_receber_list.html', {'contas': contas})
 
+
 def conta_pagar_create(request):
     if request.method == 'POST':
-        form = ContaForm(request.POST, request.FILES)
+        form = ContaPagarForm(request.POST, request.FILES)
         if form.is_valid():
             conta = form.save(commit=False)
             conta.tipo = 'PAGAR'
             conta.save()
-            return redirect('contas_pagar')
+            return redirect('financeiro:contas_pagar')
     else:
-        form = ContaForm(initial={'tipo': 'PAGAR'})
-    return render(request, 'financeiro/conta_form.html', {'form': form, 'tipo': 'PAGAR'})
+        form = ContaPagarForm()
+    return render(request, 'financeiro/conta_form_pagar.html', {'form': form, 'tipo': 'PAGAR'})
+
 
 def conta_receber_create(request):
     if request.method == 'POST':
-        form = ContaForm(request.POST, request.FILES)
+        form = ContaReceberForm(request.POST, request.FILES)
         if form.is_valid():
             conta = form.save(commit=False)
             conta.tipo = 'RECEBER'
             conta.save()
-            return redirect('contas_receber')
+            return redirect('financeiro:contas_receber')
     else:
-        form = ContaForm(initial={'tipo': 'RECEBER'})
-    return render(request, 'financeiro/conta_form.html', {'form': form, 'tipo': 'RECEBER'})
+        form = ContaReceberForm()
+    return render(request, 'financeiro/conta_form_receber.html', {'form': form, 'tipo': 'RECEBER'})
+
 
 def marcar_como_pago(request, pk):
     conta = get_object_or_404(Conta, pk=pk)
     conta.pago = True
     conta.data_pagamento = date.today()
     conta.save()
-    return redirect('contas_pagar' if conta.tipo == 'PAGAR' else 'contas_receber')
+    if conta.tipo == 'PAGAR':
+        return redirect('financeiro:contas_pagar')
+    else:
+        return redirect('financeiro:contas_receber')
+
 
 def relatorios(request):
     form = RelatorioForm(request.GET or None)
@@ -86,11 +94,38 @@ def relatorios(request):
         if data_fim:
             contas = contas.filter(data_vencimento__lte=data_fim)
 
-    # Totalizadores
     total = contas.aggregate(
-        total_valor=models.Sum('valor'),
-        total_pagas=models.Sum('valor', filter=models.Q(pago=True)),
-        total_pendentes=models.Sum('valor', filter=models.Q(pago=False)),
+        total_valor=Sum(
+            Case(
+                When(tipo='RECEBER', then=F('valor')),
+                When(tipo='PAGAR', then=F('valor') * V(-1)),
+                default=V(0),
+                output_field=DecimalField()
+            )
+        ),
+        total_pagas=Sum(
+            Case(
+                When(pago=True, tipo='PAGAR', then=F('valor') * V(-1)),
+                When(pago=True, tipo='RECEBER', then=F('valor')),
+                default=V(0),
+                output_field=DecimalField()
+            )
+        ),
+        total_recebidas=Sum(
+            Case(
+                When(pago=True, tipo='RECEBER', then=F('valor')),
+                default=V(0),
+                output_field=DecimalField()
+            )
+        ),
+        total_pendentes=Sum(
+            Case(
+                When(pago=False, tipo='PAGAR', then=F('valor') * V(-1)),
+                When(pago=False, tipo='RECEBER', then=F('valor')),
+                default=V(0),
+                output_field=DecimalField()
+            )
+        )
     )
 
     context = {
@@ -99,4 +134,22 @@ def relatorios(request):
         'total': total
     }
     return render(request, 'financeiro/relatorio.html', context)
+
+
+def confirmar_pagamento(request):
+    if request.method == 'POST':
+        conta_id = request.POST.get('conta_id')
+        data_pagamento = request.POST.get('data_pagamento')
+        comprovante = request.FILES.get('comprovante')
+
+        conta = get_object_or_404(Conta, pk=conta_id)
+        conta.pago = True
+        conta.data_pagamento = data_pagamento
+        conta.comprovante = comprovante
+        conta.save()
+
+        if conta.tipo == 'PAGAR':
+            return redirect('financeiro:contas_pagar')
+        else:
+            return redirect('financeiro:contas_receber')
 

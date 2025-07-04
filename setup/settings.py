@@ -1,21 +1,17 @@
 from pathlib import Path
 import os
+from dotenv import load_dotenv
 
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
+# Carrega o .env
+load_dotenv()
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-@(_%hjo1&@hsu92(9mj0c_!h$givfrf0%vrz0+f#8v_eigocli'
-
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-
-ALLOWED_HOSTS = []
-
+SECRET_KEY = os.getenv('SECRET_KEY')
+DEBUG = os.getenv('DEBUG') == 'True'
+ALLOWED_HOSTS = ['*']
 
 # Application definition
-
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -24,10 +20,11 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
-    #Apps do sistema
+    # Apps do sistema
     'apps.core',
     'apps.clientes',
     'apps.financeiro',
+    'widget_tweaks',
 ]
 
 MIDDLEWARE = [
@@ -59,15 +56,18 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'setup.wsgi.application'
 
-
+# PostgreSQL com .env
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'rl_construcoes',
-        'USER': 'postgres',
-        'PASSWORD': 'post123',
-        'HOST': 'localhost',
-        'PORT': '5432',
+        'NAME': os.getenv('DB_NAME'),
+        'USER': os.getenv('DB_USER'),
+        'PASSWORD': os.getenv('DB_PASSWORD'),
+        'HOST': os.getenv('DB_HOST'),
+        'PORT': os.getenv('DB_PORT'),
+        'OPTIONS': {
+            'options': '-c search_path=public'
+        }
     }
 }
 
@@ -87,25 +87,18 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
-LANGUAGE_CODE = 'en-us'
-
-TIME_ZONE = 'UTC'
-
+LANGUAGE_CODE = 'pt-br'
+TIME_ZONE = 'America/Sao_Paulo'
 USE_I18N = True
-
 USE_TZ = True
-
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-STATIC_URL = '/static/'
 
+STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static'),
     BASE_DIR / "apps" / "core" / "static",
 ]
-
-
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'

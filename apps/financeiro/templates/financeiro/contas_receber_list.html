@@ -1,8 +1,10 @@
 {% extends 'core/base.html' %}
 {% block title %}Contas a Receber | RL Construções{% endblock %}
+
 {% block content %}
 <h2 style="color: #2e7d32;">Contas a Receber</h2>
 <a href="{% url 'financeiro:nova_conta_receber' %}" class="btn-receber">Nova Conta a Receber</a>
+
 <table class="tabela-receber">
     <tr>
         <th>Cliente</th>
@@ -18,16 +20,18 @@
         <td>{{ conta.descricao }}</td>
         <td>R$ {{ conta.valor }}</td>
         <td>{{ conta.data_vencimento }}</td>
-                <td>
-          {% if conta.pago %}
-            Pago
-          {% else %}
-            Pendente
-          {% endif %}
+        <td>
+            {% if conta.pago %}
+                Pago
+            {% else %}
+                Pendente
+            {% endif %}
         </td>
         <td>
             {% if not conta.pago %}
-                <a href="{% url 'marcar_pago' conta.pk %}" class="btn btn-receber">Marcar como Pago</a>
+                <button class="btn btn-receber" data-bs-toggle="modal" data-bs-target="#modalPagamento" data-conta-id="{{ conta.id }}">
+                    Marcar como Pago
+                </button>
             {% endif %}
             {% if conta.comprovante %}
                 <a href="{{ conta.comprovante.url }}" target="_blank">Ver Anexo</a>
@@ -38,4 +42,42 @@
     <tr><td colspan="6">Nenhuma conta cadastrada.</td></tr>
     {% endfor %}
 </table>
+
+<!-- Modal para confirmação de pagamento -->
+<div class="modal fade" id="modalPagamento" tabindex="-1" aria-labelledby="modalPagamentoLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <form method="post" action="{% url 'financeiro:confirmar_pagamento' %}" enctype="multipart/form-data" class="modal-content">
+      {% csrf_token %}
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalPagamentoLabel">Confirmar Pagamento</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+      </div>
+      <div class="modal-body">
+        <input type="hidden" name="conta_id" id="conta_id_modal">
+        <div class="mb-3">
+          <label for="data_pagamento_modal" class="form-label">Data do Pagamento</label>
+          <input type="date" class="form-control" name="data_pagamento" id="data_pagamento_modal" required>
+        </div>
+        <div class="mb-3">
+          <label for="comprovante_modal" class="form-label">Comprovante</label>
+          <input type="file" class="form-control" name="comprovante" id="comprovante_modal">
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+        <button type="submit" class="btn btn-primary">Confirmar</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+  const modalPagamento = document.getElementById('modalPagamento');
+  modalPagamento.addEventListener('show.bs.modal', function (event) {
+    const button = event.relatedTarget;
+    const contaId = button.getAttribute('data-conta-id');
+    const inputContaId = modalPagamento.querySelector('#conta_id_modal');
+    inputContaId.value = contaId;
+  });
+</script>
 {% endblock %}

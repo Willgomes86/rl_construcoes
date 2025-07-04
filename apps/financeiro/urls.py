@@ -11,4 +11,6 @@ urlpatterns = [
     path('pagar/<int:pk>/', views.marcar_como_pago, name='marcar_pago'),
     path('alerta/', views.contas_alerta, name='contas_alerta'),
     path('relatorio/', views.relatorios, name='relatorios'),
+    path('confirmar-pagamento/', views.confirmar_pagamento, name='confirmar_pagamento'),
+
 ]

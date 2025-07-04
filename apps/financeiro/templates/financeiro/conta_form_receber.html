@@ -1,0 +1,83 @@
+{% extends 'core/base.html' %}
+{% block title %}Nova Conta a Receber | RL Construções{% endblock %}
+
+{% block content %}
+<h2 class="text-success">Nova Conta a Receber</h2>
+
+<form method="post" enctype="multipart/form-data" class="row g-3">
+    {% csrf_token %}
+
+    {% if form.errors %}
+      <div class="alert alert-danger w-100">
+        <ul class="mb-0">
+          {% for field in form %}
+            {% for error in field.errors %}
+              <li><strong>{{ field.label }}:</strong> {{ error }}</li>
+            {% endfor %}
+          {% endfor %}
+          {% for error in form.non_field_errors %}
+            <li>{{ error }}</li>
+          {% endfor %}
+        </ul>
+      </div>
+    {% endif %}
+
+    <div class="col-md-6">
+        {{ form.cliente.label_tag }} {{ form.cliente }}
+    </div>
+    <div class="col-md-6">
+        {{ form.descricao.label_tag }} {{ form.descricao }}
+    </div>
+
+    <div class="col-md-4">
+        {{ form.valor.label_tag }} {{ form.valor }}
+    </div>
+    <div class="col-md-4">
+        {{ form.data_vencimento.label_tag }} {{ form.data_vencimento }}
+    </div>
+
+    <div class="col-md-4">
+        <div class="form-check mt-4">
+            {{ form.pago }} <label class="form-check-label" for="{{ form.pago.id_for_label }}">Pago</label>
+        </div>
+    </div>
+
+    <div class="col-md-4" id="div_data_pagamento" style="display: none;">
+        {{ form.data_pagamento.label_tag }} {{ form.data_pagamento }}
+    </div>
+
+    <div class="col-md-4" id="div_comprovante" style="display: none;">
+        {{ form.comprovante.label_tag }} {{ form.comprovante }}
+    </div>
+
+    <div class="col-12">
+        <button type="submit" class="btn btn-success">Salvar</button>
+    </div>
+</form>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const checkbox = document.getElementById("id_pago");
+        const divDataPagamento = document.getElementById("div_data_pagamento");
+        const divComprovante = document.getElementById("div_comprovante");
+        const campoDataPagamento = document.getElementById("id_data_pagamento");
+        const campoComprovante = document.getElementById("id_comprovante");
+
+        function toggleCamposPagamento() {
+            const mostrar = checkbox.checked;
+            divDataPagamento.style.display = mostrar ? "block" : "none";
+            divComprovante.style.display = mostrar ? "block" : "none";
+
+            if (!mostrar) {
+                if (campoDataPagamento) campoDataPagamento.value = "";
+                if (campoComprovante) campoComprovante.value = "";
+            }
+        }
+
+        if (checkbox) {
+            checkbox.addEventListener("change", toggleCamposPagamento);
+            toggleCamposPagamento(); // chamada inicial
+        }
+    });
+</script>
+{% endblock %}

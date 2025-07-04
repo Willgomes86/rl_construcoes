@@ -1,26 +1,115 @@
 {% extends 'core/base.html' %}
+{% load static %}
 {% block title %}Início | RL Construções{% endblock %}
 
 {% block content %}
-<div style="display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 50px 20px; text-align: center;">
+<style>
+    /* Garantir que o container geral não adicione scroll extra */
+    .container {
+        padding: 0 !important;
+        margin: 0 auto !important;
+        max-width: 100% !important;
+        box-shadow: none !important;
+        background: none !important;
+    }
 
-    <h2 style="font-size: 28px; margin-bottom: 5px;">Bem-vindo ao Sistema <span style="color: #f26722;">RL Construções Elétricas</span></h2>
-    <div style="width: 60px; height: 3px; background-color: #f26722; margin-bottom: 30px;"></div>
+    .home-hero {
+        position: relative;
+        background-image: url("{% static 'core/img/fundo-solar.png' %}");
+        background-size: cover;
+        background-position: center;
+        height: calc(100vh - 110px); /* altura total menos header + footer */
+        border-radius: 0;
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
 
-    <p style="max-width: 700px; font-size: 16px; color: #444;">
-        Este sistema foi desenvolvido para facilitar a gestão de <strong>clientes</strong>, <strong>contas a pagar</strong> e <strong>contas a receber</strong> com eficiência e controle total.
-    </p>
+    .home-hero::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background-color: rgba(255, 255, 255, 0.50);
+        z-index: 0;
+    }
 
-    <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; margin: 40px 0;">
-        <a href="{% url 'clientes:cliente_list' %}" class="btn-laranja">Gerenciar Clientes</a>
-        <a href="{% url 'financeiro:contas_pagar' %}" class="btn-laranja">Contas a Pagar</a>
-        <a href="{% url 'financeiro:contas_receber' %}" class="btn-verde">Contas a Receber</a>
-        <a href="{% url 'financeiro:contas_alerta' %}" class="btn-azul">Contas do Dia</a>
-        <a href="{% url 'financeiro:relatorios' %}" class="btn-azul">Relatórios</a>
+    .home-card {
+        position: relative;
+        background: rgba(255, 255, 255, 0.30);
+        backdrop-filter: blur(14px);
+        -webkit-backdrop-filter: blur(14px);
+        border-radius: 16px;
+        padding: 50px 30px;
+        text-align: center;
+        max-width: 980px;
+        margin: 0 20px;
+        box-shadow: 0 8px 30px rgba(0,0,0,0.1);
+        z-index: 1;
+    }
+
+    .home-card h2 {
+        font-size: 28px;
+        margin-bottom: 8px;
+        color: #333;
+    }
+
+    .home-card h2 span {
+        color: #f26722;
+        text-decoration: underline;
+        font-weight: 600;
+    }
+
+    .home-card .divider {
+        width: 60px;
+        height: 3px;
+        background-color: #f26722;
+        margin: 0 auto 25px auto;
+    }
+
+    .home-card p {
+        font-size: 16px;
+        color: #444;
+        max-width: 700px;
+        margin: 0 auto 35px;
+    }
+
+    .home-buttons {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 15px;
+        margin-bottom: 25px;
+    }
+
+    .home-footer {
+        font-size: 13px;
+        color: #666;
+    }
+</style>
+
+<div class="home-hero">
+    <div class="home-card">
+        <h2>
+            Bem-vindo ao Sistema <span>RL Construções Elétricas</span>
+        </h2>
+        <div class="divider"></div>
+        <p>
+            Este sistema foi desenvolvido para facilitar a gestão de <strong>clientes</strong>,
+            <strong>contas a pagar</strong> e <strong>contas a receber</strong> com eficiência e controle total.
+        </p>
+
+        <div class="home-buttons">
+            <a href="{% url 'clientes:cliente_list' %}" class="btn-laranja">Gerenciar Clientes</a>
+            <a href="{% url 'financeiro:contas_pagar' %}" class="btn-laranja">Contas a Pagar</a>
+            <a href="{% url 'financeiro:contas_receber' %}" class="btn-verde">Contas a Receber</a>
+            <a href="{% url 'financeiro:contas_alerta' %}" class="btn-azul">Contas do Dia</a>
+            <a href="{% url 'financeiro:relatorios' %}" class="btn-azul">Relatórios</a>
+        </div>
+
+        <p class="home-footer">
+            Em caso de dúvidas ou para atualizações, entre em contato com o responsável técnico.
+        </p>
     </div>
-
-    <p style="margin-top: 20px; font-size: 13px; color: #666;">
-        Em caso de dúvidas ou para atualizações, entre em contato com o responsável técnico.
-    </p>
 </div>
 {% endblock %}
