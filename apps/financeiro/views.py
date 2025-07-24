@@ -153,3 +153,13 @@ def confirmar_pagamento(request):
         else:
             return redirect('financeiro:contas_receber')
 
+
+def conta_delete(request, pk):
+    conta = get_object_or_404(Conta, pk=pk)
+    tipo = conta.tipo
+    conta.delete()
+    if tipo == 'PAGAR':
+        return redirect('financeiro:contas_pagar')
+    else:
+        return redirect('financeiro:contas_receber')
+
