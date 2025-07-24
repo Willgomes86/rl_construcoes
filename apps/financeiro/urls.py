@@ -12,5 +12,6 @@ urlpatterns = [
     path('alerta/', views.contas_alerta, name='contas_alerta'),
     path('relatorio/', views.relatorios, name='relatorios'),
     path('confirmar-pagamento/', views.confirmar_pagamento, name='confirmar_pagamento'),
+    path('conta/<int:pk>/deletar/', views.conta_delete, name='conta_delete'),
 
 ]

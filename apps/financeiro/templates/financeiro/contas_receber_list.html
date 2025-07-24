@@ -36,6 +36,7 @@
             {% if conta.comprovante %}
                 <a href="{{ conta.comprovante.url }}" target="_blank">Ver Anexo</a>
             {% endif %}
+            <a href="{% url 'financeiro:conta_delete' conta.id %}" class="btn btn-danger" style="margin-left: 5px;" onclick="return confirm('Tem certeza que deseja deletar esta conta?');">Deletar</a>
         </td>
     </tr>
     {% empty %}
