@@ -8,6 +8,7 @@ urlpatterns = [
     path('', include('apps.core.urls')),  # mostra o home
     path('clientes/', include('apps.clientes.urls')),
     path('financeiro/', include('apps.financeiro.urls')),
+    path('estoque/', include('apps.estoque.urls')),
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

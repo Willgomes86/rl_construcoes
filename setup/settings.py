@@ -24,6 +24,7 @@ INSTALLED_APPS = [
     'apps.core',
     'apps.clientes',
     'apps.financeiro',
+    'apps.estoque',
     'widget_tweaks',
 ]
 
