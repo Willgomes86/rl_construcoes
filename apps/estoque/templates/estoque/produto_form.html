@@ -1,10 +1,21 @@
 {% extends 'core/base.html' %}
 
 {% block content %}
-<h1>Novo Produto</h1>
-<form method="post">
+<h2 class="mb-3">Cadastrar Produto</h2>
+<form method="post" class="row g-3">
     {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Salvar</button>
+
+    <div class="col-md-6">
+        {{ form.nome.label_tag }} {{ form.nome }}
+    </div>
+
+    <div class="col-md-6">
+        {{ form.descricao.label_tag }} {{ form.descricao }}
+    </div>
+
+    <div class="col-12 text-end">
+        <button type="submit" class="btn btn-primary">Salvar</button>
+        <a href="{% url 'estoque:produto_list' %}" class="btn btn-secondary">Cancelar</a>
+    </div>
 </form>
 {% endblock %}

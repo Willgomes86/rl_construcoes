@@ -1,12 +1,14 @@
 {% extends 'core/base.html' %}
 
 {% block content %}
-<h1>Produtos</h1>
-<p>
-    <a href="{% url 'estoque:produto_create' %}">Novo Produto</a> |
-    <a href="{% url 'estoque:entrada_create' %}">Registrar Entrada</a> |
-    <a href="{% url 'estoque:saida_create' %}">Registrar Saída</a>
-</p>
+<h2 class="mb-3">Lista de Produtos</h2>
+
+<div class="mb-3">
+    <a href="{% url 'estoque:produto_create' %}" class="btn-laranja">Cadastrar Produto</a>
+    <a href="{% url 'estoque:entrada_create' %}" class="btn-verde">Registrar Entrada</a>
+    <a href="{% url 'estoque:saida_create' %}" class="btn-azul">Registrar Saída</a>
+    </div>
+
 <table>
     <tr>
         <th>Nome</th>
