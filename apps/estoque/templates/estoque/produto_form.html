@@ -1,21 +1,178 @@
 {% extends 'core/base.html' %}
 
 {% block content %}
-<h2 class="mb-3">Cadastrar Produto</h2>
-<form method="post" class="row g-3">
-    {% csrf_token %}
+<div class="container py-4">
+  <h2 class="text-center mb-4" style="color:#C8A951;">
+    <i class="bi bi-plus-circle" style="color:#881A15;"></i> Cadastrar Produto / Item de Estoque
+  </h2>
 
-    <div class="col-md-6">
-        {{ form.nome.label_tag }} {{ form.nome }}
-    </div>
+  <div class="card mx-auto" style="max-width:1100px; background:#1e1e1e; border:1px solid #2a2a2a;">
+    <div class="card-body">
+      <form method="post" enctype="multipart/form-data" class="row g-3">
+        {% csrf_token %}
 
-    <div class="col-md-6">
-        {{ form.descricao.label_tag }} {{ form.descricao }}
-    </div>
+        <!-- Identificação -->
+        <div class="col-12"><h5 class="mb-2" style="color:#C8A951;"><i class="bi bi-info-circle"></i> Identificação</h5><hr class="mt-0"/></div>
 
-    <div class="col-12 text-end">
-        <button type="submit" class="btn btn-primary">Salvar</button>
-        <a href="{% url 'estoque:produto_list' %}" class="btn btn-secondary">Cancelar</a>
+        <div class="col-md-6">
+          <label class="form-label">Nome do produto</label>
+          {{ form.nome.as_widget(attrs={'class':'form-control bg-dark text-light', 'placeholder':'Ex.: Módulo Fotovoltaico 550W'}) }}
+          <small class="text-muted">Nome curto para aparecer em OS/comandas.</small>
+        </div>
+
+        {% if form.marca %}<div class="col-md-3">
+          <label class="form-label">Marca</label>
+          {{ form.marca.as_widget(attrs={'class':'form-control bg-dark text-light'}) }}
+        </div>{% endif %}
+
+        {% if form.modelo %}<div class="col-md-3">
+          <label class="form-label">Modelo</label>
+          {{ form.modelo.as_widget(attrs={'class':'form-control bg-dark text-light'}) }}
+        </div>{% endif %}
+
+        {% if form.categoria %}<div class="col-md-4">
+          <label class="form-label">Categoria</label>
+          {{ form.categoria.as_widget(attrs={'class':'form-control bg-dark text-light'}) }}
+          <small class="text-muted">Ex.: Cabos, Disjuntores, Inversores, Módulos…</small>
+        </div>{% endif %}
+
+        {% if form.unidade_medida %}<div class="col-md-2">
+          <label class="form-label">Unidade</label>
+          {{ form.unidade_medida.as_widget(attrs={'class':'form-control bg-dark text-light', 'placeholder':'un, m, kg…'}) }}
+        </div>{% endif %}
+
+        {% if form.descricao %}<div class="col-12">
+          <label class="form-label">Descrição detalhada</label>
+          {{ form.descricao.as_widget(attrs={'class':'form-control bg-dark text-light', 'rows':'4'}) }}
+        </div>{% endif %}
+
+        <!-- Códigos & Rastreabilidade -->
+        <div class="col-12 mt-2"><h5 class="mb-2" style="color:#C8A951;"><i class="bi bi-upc-scan"></i> Códigos & Rastreabilidade</h5><hr class="mt-0"/></div>
+
+        {% if form.sku %}<div class="col-md-3">
+          <label class="form-label">SKU / Código interno</label>
+          {{ form.sku.as_widget(attrs={'class':'form-control bg-dark text-light'}) }}
+        </div>{% endif %}
+
+        {% if form.codigo_barras %}<div class="col-md-3">
+          <label class="form-label">Código de barras (EAN)</label>
+          {{ form.codigo_barras.as_widget(attrs={'class':'form-control bg-dark text-light'}) }}
+        </div>{% endif %}
+
+        {% if form.numero_serie %}<div class="col-md-3">
+          <label class="form-label">Número de série</label>
+          {{ form.numero_serie.as_widget(attrs={'class':'form-control bg-dark text-light'}) }}
+        </div>{% endif %}
+
+        {% if form.lote %}<div class="col-md-3">
+          <label class="form-label">Lote</label>
+          {{ form.lote.as_widget(attrs={'class':'form-control bg-dark text-light'}) }}
+        </div>{% endif %}
+
+        {% if form.validade_lote %}<div class="col-md-3">
+          <label class="form-label">Validade do lote</label>
+          {{ form.validade_lote.as_widget(attrs={'class':'form-control bg-dark text-light', 'type':'date'}) }}
+        </div>{% endif %}
+
+        <!-- Estoque -->
+        <div class="col-12 mt-2"><h5 class="mb-2" style="color:#C8A951;"><i class="bi bi-box-seam"></i> Estoque</h5><hr class="mt-0"/></div>
+
+        {% if form.quantidade_inicial %}<div class="col-md-3">
+          <label class="form-label">Quantidade inicial</label>
+          {{ form.quantidade_inicial.as_widget(attrs={'class':'form-control bg-dark text-light', 'min':'0'}) }}
+        </div>{% endif %}
+
+        {% if form.estoque_minimo %}<div class="col-md-3">
+          <label class="form-label">Estoque mínimo</label>
+          {{ form.estoque_minimo.as_widget(attrs={'class':'form-control bg-dark text-light', 'min':'0'}) }}
+          <small class="text-muted">Alerta quando atingir o mínimo.</small>
+        </div>{% endif %}
+
+        {% if form.quantidade %}<div class="col-md-3">
+          <label class="form-label">Quantidade atual</label>
+          {{ form.quantidade.as_widget(attrs={'class':'form-control bg-dark text-light', 'min':'0'}) }}
+        </div>{% endif %}
+
+        {% if form.localizacao %}<div class="col-md-6">
+          <label class="form-label">Localização física</label>
+          {{ form.localizacao.as_widget(attrs={'class':'form-control bg-dark text-light', 'placeholder':'Almox A • Prat. 03 • Gaveta Cabos 6mm'}) }}
+        </div>{% endif %}
+
+        {% if form.ativo %}<div class="col-md-3 d-flex align-items-end">
+          <div class="form-check">
+            {{ form.ativo.as_widget(attrs={'class':'form-check-input'}) }}
+            <label class="form-check-label">Ativo para uso/venda</label>
+          </div>
+        </div>{% endif %}
+
+        <!-- Comercial -->
+        <div class="col-12 mt-2"><h5 class="mb-2" style="color:#C8A951;"><i class="bi bi-cash-coin"></i> Comercial</h5><hr class="mt-0"/></div>
+
+        {% if form.custo %}<div class="col-md-3">
+          <label class="form-label">Custo (R$)</label>
+          {{ form.custo.as_widget(attrs={'class':'form-control bg-dark text-light', 'step':'0.01', 'min':'0'}) }}
+        </div>{% endif %}
+        {% if form.preco_venda %}<div class="col-md-3">
+          <label class="form-label">Preço de venda (R$)</label>
+          {{ form.preco_venda.as_widget(attrs={'class':'form-control bg-dark text-light', 'step':'0.01', 'min':'0'}) }}
+        </div>{% endif %}
+        {% if form.garantia_meses %}<div class="col-md-3">
+          <label class="form-label">Garantia (meses)</label>
+          {{ form.garantia_meses.as_widget(attrs={'class':'form-control bg-dark text-light', 'min':'0'}) }}
+        </div>{% endif %}
+
+        <!-- Fornecedor & Aquisição -->
+        <div class="col-12 mt-2"><h5 class="mb-2" style="color:#C8A951;"><i class="bi bi-truck"></i> Fornecedor & Aquisição</h5><hr class="mt-0"/></div>
+
+        {% if form.fornecedor %}<div class="col-md-4">
+          <label class="form-label">Fornecedor</label>
+          {{ form.fornecedor.as_widget(attrs={'class':'form-control bg-dark text-light'}) }}
+        </div>{% endif %}
+        {% if form.nota_fiscal %}<div class="col-md-4">
+          <label class="form-label">Nota Fiscal</label>
+          {{ form.nota_fiscal.as_widget(attrs={'class':'form-control bg-dark text-light', 'placeholder':'Nº/Chave NF'}) }}
+        </div>{% endif %}
+        {% if form.data_compra %}<div class="col-md-4">
+          <label class="form-label">Data da compra</label>
+          {{ form.data_compra.as_widget(attrs={'class':'form-control bg-dark text-light', 'type':'date'}) }}
+        </div>{% endif %}
+
+        <!-- Elétricas / Solar -->
+        <div class="col-12 mt-2"><h5 class="mb-2" style="color:#C8A951;"><i class="bi bi-lightning-charge"></i> Especificações Elétricas / Solar</h5><hr class="mt-0"/></div>
+
+        {% if form.tensao %}<div class="col-md-2"><label class="form-label">Tensão (V)</label>{{ form.tensao.as_widget(attrs={'class':'form-control bg-dark text-light'}) }}</div>{% endif %}
+        {% if form.corrente %}<div class="col-md-2"><label class="form-label">Corrente (A)</label>{{ form.corrente.as_widget(attrs={'class':'form-control bg-dark text-light'}) }}</div>{% endif %}
+        {% if form.potencia %}<div class="col-md-2"><label class="form-label">Potência (W)</label>{{ form.potencia.as_widget(attrs={'class':'form-control bg-dark text-light'}) }}</div>{% endif %}
+        {% if form.ip %}<div class="col-md-2"><label class="form-label">Grau IP</label>{{ form.ip.as_widget(attrs={'class':'form-control bg-dark text-light', 'placeholder':'Ex.: IP65'}) }}</div>{% endif %}
+        {% if form.vmp %}<div class="col-md-2"><label class="form-label">Vmp (V)</label>{{ form.vmp.as_widget(attrs={'class':'form-control bg-dark text-light'}) }} <small class="text-muted">Módulo FV</small></div>{% endif %}
+        {% if form.imp %}<div class="col-md-2"><label class="form-label">Imp (A)</label>{{ form.imp.as_widget(attrs={'class':'form-control bg-dark text-light'}) }} <small class="text-muted">Módulo FV</small></div>{% endif %}
+        {% if form.dimensoes %}<div class="col-md-6"><label class="form-label">Dimensões (C x L x A)</label>{{ form.dimensoes.as_widget(attrs={'class':'form-control bg-dark text-light', 'placeholder':'Ex.: 2279 x 1134 x 35 mm'}) }}</div>{% endif %}
+        {% if form.peso %}<div class="col-md-2"><label class="form-label">Peso (kg)</label>{{ form.peso.as_widget(attrs={'class':'form-control bg-dark text-light', 'step':'0.01', 'min':'0'}) }}</div>{% endif %}
+
+        <!-- Observações & Anexos -->
+        <div class="col-12 mt-2"><h5 class="mb-2" style="color:#C8A951;"><i class="bi bi-paperclip"></i> Observações & Anexos</h5><hr class="mt-0"/></div>
+
+        {% if form.observacoes %}<div class="col-12">
+          <label class="form-label">Observações</label>
+          {{ form.observacoes.as_widget(attrs={'class':'form-control bg-dark text-light', 'rows':'3'}) }}
+        </div>{% endif %}
+
+        {% if form.imagem %}<div class="col-md-6">
+          <label class="form-label">Foto / Imagem</label>
+          {{ form.imagem.as_widget(attrs={'class':'form-control bg-dark text-light'}) }}
+        </div>{% endif %}
+
+        {% if form.manual_pdf %}<div class="col-md-6">
+          <label class="form-label">Manual / Datasheet (PDF)</label>
+          {{ form.manual_pdf.as_widget(attrs={'class':'form-control bg-dark text-light'}) }}
+        </div>{% endif %}
+
+        <div class="col-12 d-flex justify-content-end gap-2 mt-2">
+          <a href="{% url 'estoque:produto_list' %}" class="btn btn-secondary"><i class="bi bi-x-circle"></i> Cancelar</a>
+          <button type="submit" class="btn btn-danger"><i class="bi bi-save"></i> Salvar</button>
+        </div>
+      </form>
     </div>
-</form>
+  </div>
+</div>
 {% endblock %}
