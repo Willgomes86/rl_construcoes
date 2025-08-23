@@ -5,7 +5,7 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.db.models import Q
 
 from .forms import ProdutoForm, EntradaProdutoForm, SaidaProdutoForm
-from .models import Produto, EntradaProduto, SaidaProduto
+from .models import Produto, Movimentacao
 
 
 # -------------------------
