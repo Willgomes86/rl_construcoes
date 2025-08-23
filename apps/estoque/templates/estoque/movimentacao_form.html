@@ -1,5 +1,38 @@
 {% extends 'core/base.html' %}
 {% block content %}
+<style>
+  .card-body, .card-body label, .card-body small,
+  .card-body input, .card-body textarea, .card-body select {
+    color: #f1f1f1 !important; /* texto claro */
+  }
+
+  .card-body input, .card-body textarea, .card-body select {
+    background-color: #2b2b2b;
+    border: 1px solid #444;
+    color: #f1f1f1 !important;
+  }
+
+  .card-body input::placeholder,
+  .card-body textarea::placeholder {
+    color: #aaa !important;
+  }
+
+  .form-check-label {
+    color: #f1f1f1 !important;
+  }
+
+  /* highlight dourado quando focar */
+  .card-body input:focus,
+  .card-body textarea:focus,
+  .card-body select:focus {
+    background-color: #2b2b2b;
+    color: #f1f1f1;
+    border-color: #C8A951;
+    box-shadow: 0 0 0 .2rem rgba(200,169,81,.25);
+    outline: none;
+  }
+</style>
+
 <div class="container py-4">
   <h2 class="text-center mb-4" style="color:#C8A951;">
     <i class="bi bi-arrow-left-right" style="color:#881A15;"></i> {{ titulo }}
@@ -22,8 +55,12 @@
           {{ form.observacao }}
         </div>
         <div class="col-12 d-flex justify-content-end gap-2">
-          <a href="{% url 'estoque:produto_list' %}" class="btn btn-secondary"><i class="bi bi-x-circle"></i> Cancelar</a>
-          <button type="submit" class="btn btn-danger"><i class="bi bi-check2-circle"></i> Salvar</button>
+          <a href="{% url 'estoque:produto_list' %}" class="btn btn-secondary">
+            <i class="bi bi-x-circle"></i> Cancelar
+          </a>
+          <button type="submit" class="btn btn-danger">
+            <i class="bi bi-check2-circle"></i> Salvar
+          </button>
         </div>
       </form>
     </div>
