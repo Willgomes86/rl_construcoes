@@ -1,6 +1,6 @@
 # apps/estoque/forms.py
 from django import forms
-from .models import Produto, EntradaProduto, SaidaProduto  # ajuste os nomes
+from .models import Produto, Movimentacao
 
 class DateInput(forms.DateInput):
     input_type = "date"
@@ -12,6 +12,7 @@ class ProdutoForm(forms.ModelForm):
         fields = "__all__"
         widgets = {
             "data_compra": DateInput(),
+            "data_fabricacao": DateInput(),
             "validade_lote": DateInput(),
             "descricao": forms.Textarea(attrs={"rows": 4}),
             "observacoes": forms.Textarea(attrs={"rows": 3}),
@@ -65,12 +66,24 @@ class _BaseMovForm(forms.ModelForm):
 
 class EntradaProdutoForm(_BaseMovForm):
     class Meta:
-        model = EntradaProduto
-        fields = "__all__"
-        widgets = {"data": DateInput(), "observacao": forms.Textarea(attrs={"rows": 2})}
+        model = Movimentacao
+        fields = ["produto", "quantidade", "observacao"]
+
+    def save(self, commit=True):
+        inst = super().save(commit=False)
+        inst.tipo = "ENTRADA"
+        if commit:
+            inst.save()
+        return inst
 
 class SaidaProdutoForm(_BaseMovForm):
     class Meta:
-        model = SaidaProduto
-        fields = "__all__"
-        widgets = {"data": DateInput(), "observacao": forms.Textarea(attrs={"rows": 2})}
+        model = Movimentacao
+        fields = ["produto", "quantidade", "observacao"]
+
+    def save(self, commit=True):
+        inst = super().save(commit=False)
+        inst.tipo = "SAIDA"
+        if commit:
+            inst.save()
+        return inst
