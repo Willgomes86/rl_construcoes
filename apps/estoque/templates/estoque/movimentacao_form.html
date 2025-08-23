@@ -11,15 +11,15 @@
         {% csrf_token %}
         <div class="col-md-6">
           <label class="form-label">{{ form.produto.label }}</label>
-          {{ form.produto.as_widget(attrs={'class':'form-control bg-dark text-light'}) }}
+          {{ form.produto }}
         </div>
         <div class="col-md-6">
           <label class="form-label">{{ form.quantidade.label }}</label>
-          {{ form.quantidade.as_widget(attrs={'class':'form-control bg-dark text-light','min':'1'}) }}
+          {{ form.quantidade }}
         </div>
         <div class="col-12">
           <label class="form-label">{{ form.observacao.label }}</label>
-          {{ form.observacao.as_widget(attrs={'class':'form-control bg-dark text-light'}) }}
+          {{ form.observacao }}
         </div>
         <div class="col-12 d-flex justify-content-end gap-2">
           <a href="{% url 'estoque:produto_list' %}" class="btn btn-secondary"><i class="bi bi-x-circle"></i> Cancelar</a>
