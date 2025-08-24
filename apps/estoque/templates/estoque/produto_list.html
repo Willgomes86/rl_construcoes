@@ -18,6 +18,15 @@
     </a>
   </div>
 
+  {% if messages %}
+    {% for message in messages %}
+      <div class="alert alert-success alert-dismissible fade show" role="alert">
+        {{ message }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+    {% endfor %}
+  {% endif %}
+
   <div class="card" style="background:#1e1e1e; border:1px solid #2a2a2a;">
     <div class="card-body p-0">
       <div class="table-responsive">
@@ -27,6 +36,7 @@
               <th>Nome</th>
               <th>Descrição</th>
               <th class="text-center">Quantidade</th>
+              <th class="text-center">Ações</th>
             </tr>
           </thead>
           <tbody>
@@ -35,10 +45,18 @@
                 <td>{{ produto.nome }}</td>
                 <td class="text-muted">{{ produto.descricao }}</td>
                 <td class="text-center fw-semibold">{{ produto.quantidade }}</td>
+                <td class="text-center">
+                  <a href="{% url 'estoque:produto_update' produto.pk %}" class="btn btn-sm btn-outline-warning" title="Editar">
+                    <i class="bi bi-pencil"></i>
+                  </a>
+                  <a href="{% url 'estoque:produto_delete' produto.pk %}" class="btn btn-sm btn-outline-danger" title="Excluir">
+                    <i class="bi bi-trash"></i>
+                  </a>
+                </td>
               </tr>
             {% empty %}
               <tr>
-                <td colspan="3" class="text-center py-4 text-muted">Nenhum produto cadastrado.</td>
+                <td colspan="4" class="text-center py-4 text-muted">Nenhum produto cadastrado.</td>
               </tr>
             {% endfor %}
           </tbody>
