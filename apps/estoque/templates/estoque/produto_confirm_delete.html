@@ -1,0 +1,21 @@
+{% extends 'core/base.html' %}
+
+{% block content %}
+<div class="container py-5">
+  <div class="card mx-auto" style="max-width:500px; background:#1e1e1e; border:1px solid #2a2a2a;">
+    <div class="card-body text-center text-light">
+      <h4 class="mb-3" style="color:#C8A951;">Excluir Produto</h4>
+      <p>Tem certeza que deseja excluir o produto <strong>{{ produto.nome }}</strong>?</p>
+      <form method="post" class="d-flex justify-content-center gap-2 mt-3">
+        {% csrf_token %}
+        <a href="{% url 'estoque:produto_list' %}" class="btn btn-secondary">
+          <i class="bi bi-x-circle"></i> Cancelar
+        </a>
+        <button type="submit" class="btn btn-danger">
+          <i class="bi bi-trash"></i> Excluir
+        </button>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}
